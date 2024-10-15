@@ -1,4 +1,4 @@
-# LLMConf: Knowledge-Enhanced Configuration Optimization for Large Language Model Inference
+<img width="706" alt="image" src="https://github.com/user-attachments/assets/bcd3d6e6-8141-4567-9030-2369932c1051"># LLMConf: Knowledge-Enhanced Configuration Optimization for Large Language Model Inference
 
 ## 💡 What is LLMConf?
 LLMConf is a multi-parameter tuning method for LLMs. By leveraging knowledge-enhanced techniques, we identify tuning parameters and their value ranges, significantly reducing the search space for parameter combinations. To capture the impact of configuration parameters on inference performance, we use the automated machine learning tool TPOT to model the functional relationships between configuration parameters and each performance metric. Additionally, to optimize multiple performance metrics simultaneously and resolve conflicts in optimization directions, we implement a multi-objective optimization module based on the genetic algorithm.
@@ -21,8 +21,12 @@ conda create -n LLMConf python=3.10
 conda activate LLMConf
 ```
 
-**Install Dependencies:** Move into the `LLMConf` directory and install the necessary dependencies by running:
+**Install Dependencies:** install the necessary dependencies by running:
 ```bash
-cd LLMConf
 pip install -r requirements.txt
 ```
+
+After completing the above steps, move into the `LLMConf` directory and follow the steps below to run the LLMConf project.
+
+## - Knowledge-based Parameter Selection
+
