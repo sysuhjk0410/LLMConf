@@ -9,4 +9,5 @@ LLMConf demonstrates a strong transferability across diverse datasets, varying c
 
 
 # 🚀 Performance snapshot
+We evaluate the inference performance of LLMs from two aspects: latency and throughput. In terms of latency, we consider ***_latency_*** (the time taken to complete each request)
 ![image](https://github.com/sysuhjk0410/image/blob/main/LLMConf_exp.png)
