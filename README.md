@@ -31,4 +31,6 @@ pip install -r requirements.txt
 After completing the above steps, move into the `LLMConf` directory and follow the steps below to run the LLMConf project.
 
 ## - Knowledge-based Parameter Selection
+We need to structure the constructed knowledge base into the prompt. 
+For the prompt used in parameter selection, refer to `LLMConf/ParameterSelection/selectConfiguration.txt`, and for the prompt used in tuning parameter types and ranges, refer to `LLMConf/ParameterSelection/TypeandRange.txt`.
 
