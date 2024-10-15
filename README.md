@@ -3,7 +3,7 @@
 ## 💡 What is LLMConf?
 LLMConf is a multi-parameter tuning method for LLMs. By leveraging knowledge-enhanced techniques, we identify tuning parameters and their value ranges, significantly reducing the search space for parameter combinations. To capture the impact of configuration parameters on inference performance, we use the automated machine learning tool TPOT to model the functional relationships between configuration parameters and each performance metric. Additionally, to optimize multiple performance metrics simultaneously and resolve conflicts in optimization directions, we implement a multi-objective optimization module based on the genetic algorithm.
 
-The experimental results show that LLMConf significantly outperforms state-of-the-art methods, achieving an average performance improvement of **_19.8%_** on **_16_** metrics.
+The experimental results show that LLMConf significantly outperforms state-of-the-art methods, achieving an average performance improvement of **19.8%** on **16** metrics.
 
 LLMConf demonstrates a strong transferability across diverse datasets, varying concurrency levels, and different LLM base models.
 
