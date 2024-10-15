@@ -14,7 +14,15 @@ We evaluate the inference performance of LLMs from two aspects: latency and thro
 ![image](https://github.com/sysuhjk0410/image/blob/main/LLMConf_result.png)
 
 # 💻 Quickstart
-**Clone the GitHub Repository:** Begin by cloning the repository using the command:
+
+**Set Up Python Environment:** Use the following commands to create and activate the python environment:
 ```bash
-git clone https://github.com/OpenBMB/ChatDev.git
+conda create -n LLMConf python=3.10
+conda activate LLMConf
+```
+
+**Install Dependencies:** Move into the `LLMConf` directory and install the necessary dependencies by running:
+```bash
+cd LLMConf
+pip install -r requirements.txt
 ```
