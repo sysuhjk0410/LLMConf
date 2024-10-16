@@ -1,4 +1,4 @@
-# LLMConf: Knowledge-Enhanced Configuration Optimization for Large Language Model Inference
+<img width="554" alt="image" src="https://github.com/user-attachments/assets/667f6427-15c0-4e92-b9f5-7829b5e3ccd5"># LLMConf: Knowledge-Enhanced Configuration Optimization for Large Language Model Inference
 
 ## 💡 What is LLMConf?
 LLMConf is a multi-parameter tuning method for LLMs. By leveraging knowledge-enhanced techniques, we identify tuning parameters and their value ranges, significantly reducing the search space for parameter combinations. To capture the impact of configuration parameters on inference performance, we use the automated machine learning tool TPOT to model the functional relationships between configuration parameters and each performance metric. Additionally, to optimize multiple performance metrics simultaneously and resolve conflicts in optimization directions, we implement a multi-objective optimization module based on the genetic algorithm.
@@ -80,5 +80,56 @@ Run the following command to complete the modeling of the tuning parameters with
 python modeling.py
 ```
 ⚖️ Other modeling methods:
+- `CNN model`:
+```bash
+cd comp
+python CNN.py
+```
+- `MLP model`:
+```bash
+cd comp
+python MLP.py
+```
+- `Random Forest model`:
+```bash
+cd comp
+python RandomForest.py
+```
+- `SVM model`:
+```bash
+cd comp
+python SVM.py
+```
+- `XGBoost model`:
+```bash
+cd comp
+python XGBoost.py
+```
 
-
+## - Multi-Objective Optimization
+Run the following command to complete the recommendation of optimal configuration parameters.
+```bash
+cd Functions
+python optimize.py
+```
+⚖️ Other multi-objective optimization algorithms:
+- `RS`:
+```bash
+python RS.py
+```
+- `SCOOT`:
+```bash
+python SCOOT.py
+```
+- `MAB`:
+```bash
+python MultiBandit.py
+```
+- `DDPG`:
+```bash
+python DDPG.py
+```
+- `NSGA-III`:
+```bash
+python NSGA3.py
+```
