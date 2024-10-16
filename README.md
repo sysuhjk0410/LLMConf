@@ -55,13 +55,13 @@ Run the following command to automate data collection.
 python auto.py
 ```
 ✨️ Note:
-- 'config.yml': Include the range and type of all tuning parameters.
-- 'SetConfig.py': Randomly set the values of various configuration parameters.
-- 'vllm_benchmark.py': Test the inference performance of the LLM by a series of performance metrics.
+- `config.yml`: Include the range and type of all tuning parameters.
+- `SetConfig.py`: Randomly set the values of various configuration parameters.
+- `vllm_benchmark.py`: Test the inference performance of the LLM by a series of performance metrics.
 
 If only collecting the inference performance of the LLM under a specific combination of configuration parameters, the following command can be run.
 ```bash
 vllm serve /LLMConf/BaseLLM/Meta-Llama-3-8B-Instruct --port 8100
 python /LLMConf/vllm_benchmark1.py --num_requests 200 --concurrency 80 --output_tokens 200 --vllm_url http://localhost:8100/v1 --api_key EMPTY
 ```
-✨️ Note: All the data collected in this experiment can be found in the 'Data' folder.(The naming of the CSV file sequentially represents LLM, concurrency, and dataset.)
+✨️ Note: All the data collected in this experiment can be found in the `Data` folder.(The naming of the CSV file sequentially represents LLM, concurrency, and dataset.)
