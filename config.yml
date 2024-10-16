@@ -1,0 +1,40 @@
+# config.yml
+max-num-batched-tokens:
+  type: Integer
+  range: [4000, 8192]
+
+max-num-seqs:
+  type: Integer
+  range: [64, 2048]
+
+swap-space:
+  type: Integer
+  range: [1, 8]
+
+block-size:
+  type: Enumeration
+  values: [8, 16, 32]
+
+scheduler-delay-factor:
+  type: Float
+  range: [0.0, 2.0]
+
+gpu-memory-utilization:
+  type: Float
+  range: [0.7, 1.0]
+
+enable-chunked-prefill:
+  type: Boolean
+  values: [True, False]
+
+enable-prefix-caching:
+  type: Boolean
+  values: [True, False]
+
+disable-custom-all-reduce:
+  type: Boolean
+  values: [True, False]
+
+use-v2-block-manager:
+  type: Boolean
+  values: [True, False]  
