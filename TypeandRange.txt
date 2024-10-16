@@ -1,0 +1,67 @@
+Below is the model configuration information for llama3 based on vllm deployment:
+config.json:
+{
+  "architectures": [
+    "LlamaForCausalLM"
+  ],
+  "attention_bias": false,
+  "attention_dropout": 0.0,
+  "bos_token_id": 128000,
+  "eos_token_id": 128009,
+  "hidden_act": "silu",
+  "hidden_size": 4096,
+  "initializer_range": 0.02,
+  "intermediate_size": 14336,
+  "max_position_embeddings": 8192,
+  "model_type": "llama",
+  "num_attention_heads": 32,
+  "num_hidden_layers": 32,
+  "num_key_value_heads": 8,
+  "pretraining_tp": 1,
+  "rms_norm_eps": 1e-05,
+  "rope_scaling": null,
+  "rope_theta": 500000.0,
+  "tie_word_embeddings": false,
+  "torch_dtype": "bfloat16",
+  "transformers_version": "4.40.0.dev0",
+  "use_cache": true,
+  "vocab_size": 128256
+}
+configuration.json:
+{"framework":"Pytorch","task":"text-generation"}
+generation_config.json:
+{
+  "bos_token_id": 128000,
+  "eos_token_id": [128001, 128009],
+  "do_sample": true,
+  "temperature": 0.6,
+  "max_length": 4096,
+  "top_p": 0.9,
+  "transformers_version": "4.40.0.dev0"
+}
+
+Below is the configuration information of the GPUs used in the experiment:
+{
+    NVIDIA-SMI 550.54.15
+    Driver Version: 550.54.15
+    CUDA Version: 12.4
+    GPU  Name:NVIDIA A40
+    Memory-Usage:46068MiB
+}
+
+Here is the meaning of max-num-batched-tokens in the vLLM Engine Arguments:
+[--max-num-batched-tokens MAX_NUM_BATCHED_TOKENS]: Maximum number of batched tokens per iteration.
+
+Here are some of the latest related research:
+In the paper titled ‘Towards SLO-Optimized LLM Serving via Automatic Inference Engine Tuning,' published in 2024, it is pointed out that the range for max-num-batched-tokens (Integer) should be limited to [64, 8192].
+
+Here are issues raised by users in the open-source community for LLMs:
+[Bug] Fuyu test cannot run in CI with the increased 
+max_num_batched_tokens=8192.
+[Solution] The issue can be resolved by reducing its value to 4096.
+
+Here is the pre-knowledge about the parameter max-num-batched-tokens:
+The value of max-num-batched-tokens must be greater than or equal to the values of max-model-len and max-num-seqs.
+
+
+Please provide a more precise range for max-num-batched-tokens based on the above.
