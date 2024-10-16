@@ -47,7 +47,6 @@ python llm_chat.py
 ## - Data Collector
 Run the following command to deploy LLM (the `BaseLLLM` folder needs to be created before downloading LLM).
 ```bash
-export VLLM_USE_MODELSCOPE=True
 modelscope download --model 'LLM-Research/Meta-Llama-3-8B-Instruct' --local_dir 'BaseLLM/Meta-Llama-3-8B-Instruct'
 modelscope download --model 'Qwen/Qwen2.5-14B-Instruct' --local_dir 'BaseLLM/Qwen/Qwen2.5-14B-Instruct'
 ```
