@@ -1,4 +1,4 @@
-# LLMConf: Knowledge-Enhanced Configuration Optimization for Large Language Model Inference
+<img width="326" alt="image" src="https://github.com/user-attachments/assets/b7fc9b05-5992-45f2-92bf-f60c9859d414"># LLMConf: Knowledge-Enhanced Configuration Optimization for Large Language Model Inference
 
 ## 💡 What is LLMConf?
 LLMConf is a multi-parameter tuning method for LLMs. By leveraging knowledge-enhanced techniques, we identify tuning parameters and their value ranges, significantly reducing the search space for parameter combinations. To capture the impact of configuration parameters on inference performance, we use the automated machine learning tool TPOT to model the functional relationships between configuration parameters and each performance metric. Additionally, to optimize multiple performance metrics simultaneously and resolve conflicts in optimization directions, we implement a multi-objective optimization module based on the genetic algorithm.
@@ -67,4 +67,17 @@ python /LLMConf/vllm_benchmark1.py --num_requests 200 --concurrency 80 --output_
 ✨️ If using the `ChatDoctor-HealthCareMagic-100k` dataset for testing, `vllm_benchmark_Health.py` can be run.
 
 ✨️ Note: All the data collected in this experiment can be found in the `Data` folder.(The naming of the CSV file sequentially represents LLM, concurrency, and dataset.)
+
+## - Performance Modeling
+First, move the data that needs to be modeled to the `Modeling` directory.
+Run the following command to convert the Boolean type in the data to 0 or 1.
+```bash
+cd Modeling
+python convert.py
+```
+Run the following command to complete the modeling of the tuning parameters with each performance metric.
+```bash
+python modeling.py
+```
+⚖️ Other modeling methods
 
