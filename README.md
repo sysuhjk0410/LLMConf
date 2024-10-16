@@ -43,3 +43,16 @@ For the prompt used in determining the range and type of each tuning parameters,
 python llm_chat.py
 ```
 ✨️ Note: The `api_key` and `base_url` need to be filled in.
+
+## - Data Collector
+Run the following command to deploy LLM (the `BaseLLLM` folder needs to be created before downloading LLM).
+```bash
+export VLLM_USE_MODELSCOPE=True
+modelscope download --model 'LLM-Research/Meta-Llama-3-8B-Instruct' --local_dir 'BaseLLM/Meta-Llama-3-8B-Instruct'
+modelscope download --model 'Qwen/Qwen2.5-14B-Instruct' --local_dir 'BaseLLM/Qwen/Qwen2.5-14B-Instruct'
+```
+Run the following command to automate data collection.
+```bash
+python auto.py
+```
+
