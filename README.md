@@ -79,5 +79,6 @@ Run the following command to complete the modeling of the tuning parameters with
 ```bash
 python modeling.py
 ```
-⚖️ Other modeling methods
+⚖️ Other modeling methods:
+
 
