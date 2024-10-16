@@ -38,3 +38,8 @@ For the prompt used in parameter selection, refer to `SelectConfiguration.txt`. 
 cd LLMConf
 python llm_chat.py
 ```
+For the prompt used in determining the range of tuning parameters, refer to `TypeandRange.txt`. Run the following command to complete the determination of the range and type of each tuning parameter, setting the `file_path` value to `./TypeandRange.txt`.
+```bash
+python llm_chat.py
+```
+✨️ Note: The `api_key` and `base_url` need to be filled in.
