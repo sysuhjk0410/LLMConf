@@ -32,6 +32,7 @@ After completing the above steps, move into the `LLMConf` directory and follow t
 
 ## - Knowledge-based Parameter Selection
 We need to structure the constructed knowledge base into the prompt. 
+
 For the prompt used in parameter selection, refer to `SelectConfiguration.txt`. Run the following command to complete the tuning parameter selection, setting the `file_path` value to `./SelectConfiguration.txt`.
 ```bash
 cd LLMConf
