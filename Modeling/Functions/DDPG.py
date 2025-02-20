@@ -22,7 +22,7 @@ from predict_functions import (
     predict_tokens_per_second_average
 )
 
-# 定义配置参数范围
+# Define the range of configuration parameters
 config_ranges = {
     "max_num_batched_tokens": (4000, 8192),
     "max_num_seqs": (64, 2048),
@@ -36,7 +36,7 @@ config_ranges = {
     "use_v2_block_manager": [0, 1]
 }
 
-# 解析命令行参数
+# Parse command line arguments
 parser = argparse.ArgumentParser()
 parser.add_argument('--mode', default='train', type=str)
 parser.add_argument("--env_name", default="Pendulum-v1")  # Change the environment name to Pendulum-v1
