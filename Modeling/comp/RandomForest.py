@@ -25,7 +25,7 @@ X_scaled = scaler_X.fit_transform(X)
 for i, metric in enumerate(metrics):
     print(f"Training Random Forest model for {metric}...")
 
-    # Get the dependent variable for the current performance metric (columns 11 to 26)
+    # Get the dependent variable for the current performance metric 
     y = data.iloc[:, 10 + i].values
 
     # Standardize the performance metric data
