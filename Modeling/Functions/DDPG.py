@@ -13,10 +13,14 @@ from tensorboardX import SummaryWriter
 
 # Import prediction function
 from predict_functions import (
-    predict_latency_average, predict_latency_p50, predict_latency_p95, predict_latency_p99,
-    predict_time_to_first_token_average, predict_time_to_first_token_p50, predict_time_to_first_token_p95, predict_time_to_first_token_p99,
-    predict_time_per_output_token_average, predict_time_per_output_token_p50, predict_time_per_output_token_p95, predict_time_per_output_token_p99,
-    predict_tokens_per_second_average, predict_tokens_per_second_p50, predict_tokens_per_second_p95, predict_tokens_per_second_p99
+    predict_latency_average, 
+    predict_latency_p99,
+    predict_time_to_first_token_average, 
+    predict_time_to_first_token_p99,
+    predict_time_per_output_token_average, 
+    predict_time_per_output_token_p99,
+    predict_tokens_per_second_average, 
+    predict_tokens_per_second_p99
 )
 
 # 定义配置参数范围
@@ -160,7 +164,7 @@ class DDPG:
             # Calculate current Q-value
             current_Q = self.critic(state, action)
 
-           # Calculate Critic loss
+            # Calculate Critic loss
             critic_loss = F.mse_loss(current_Q, target_Q)
             self.writer.add_scalar('Loss/critic_loss', critic_loss, global_step=self.num_critic_update_iteration)
             self.critic_optimizer.zero_grad()
@@ -208,32 +212,6 @@ def evaluate_config(config):
         use_v2_block_manager=config["use_v2_block_manager"]
     )
 
-    latency_p50 = predict_latency_p50(
-        max_num_batched_tokens=config["max_num_batched_tokens"],
-        max_num_seqs=config["max_num_seqs"],
-        swap_space=config["swap_space"],
-        block_size=config["block_size"],
-        scheduler_delay_factor=config["scheduler_delay_factor"],
-        gpu_memory_utilization=config["gpu_memory_utilization"],
-        enable_chunked_prefill=config["enable_chunked_prefill"],
-        enable_prefix_caching=config["enable_prefix_caching"],
-        disable_custom_all_reduce=config["disable_custom_all_reduce"],
-        use_v2_block_manager=config["use_v2_block_manager"]
-    )
-
-    latency_p95 = predict_latency_p95(
-        max_num_batched_tokens=config["max_num_batched_tokens"],
-        max_num_seqs=config["max_num_seqs"],
-        swap_space=config["swap_space"],
-        block_size=config["block_size"],
-        scheduler_delay_factor=config["scheduler_delay_factor"],
-        gpu_memory_utilization=config["gpu_memory_utilization"],
-        enable_chunked_prefill=config["enable_chunked_prefill"],
-        enable_prefix_caching=config["enable_prefix_caching"],
-        disable_custom_all_reduce=config["disable_custom_all_reduce"],
-        use_v2_block_manager=config["use_v2_block_manager"]
-    )
-
     latency_p99 = predict_latency_p99(
         max_num_batched_tokens=config["max_num_batched_tokens"],
         max_num_seqs=config["max_num_seqs"],
@@ -248,32 +226,6 @@ def evaluate_config(config):
     )
 
     time_to_first_token_average = predict_time_to_first_token_average(
-        max_num_batched_tokens=config["max_num_batched_tokens"],
-        max_num_seqs=config["max_num_seqs"],
-        swap_space=config["swap_space"],
-        block_size=config["block_size"],
-        scheduler_delay_factor=config["scheduler_delay_factor"],
-        gpu_memory_utilization=config["gpu_memory_utilization"],
-        enable_chunked_prefill=config["enable_chunked_prefill"],
-        enable_prefix_caching=config["enable_prefix_caching"],
-        disable_custom_all_reduce=config["disable_custom_all_reduce"],
-        use_v2_block_manager=config["use_v2_block_manager"]
-    )
-
-    time_to_first_token_p50 = predict_time_to_first_token_p50(
-        max_num_batched_tokens=config["max_num_batched_tokens"],
-        max_num_seqs=config["max_num_seqs"],
-        swap_space=config["swap_space"],
-        block_size=config["block_size"],
-        scheduler_delay_factor=config["scheduler_delay_factor"],
-        gpu_memory_utilization=config["gpu_memory_utilization"],
-        enable_chunked_prefill=config["enable_chunked_prefill"],
-        enable_prefix_caching=config["enable_prefix_caching"],
-        disable_custom_all_reduce=config["disable_custom_all_reduce"],
-        use_v2_block_manager=config["use_v2_block_manager"]
-    )
-
-    time_to_first_token_p95 = predict_time_to_first_token_p95(
         max_num_batched_tokens=config["max_num_batched_tokens"],
         max_num_seqs=config["max_num_seqs"],
         swap_space=config["swap_space"],
@@ -312,32 +264,6 @@ def evaluate_config(config):
         use_v2_block_manager=config["use_v2_block_manager"]
     )
 
-    time_per_output_token_p50 = predict_time_per_output_token_p50(
-        max_num_batched_tokens=config["max_num_batched_tokens"],
-        max_num_seqs=config["max_num_seqs"],
-        swap_space=config["swap_space"],
-        block_size=config["block_size"],
-        scheduler_delay_factor=config["scheduler_delay_factor"],
-        gpu_memory_utilization=config["gpu_memory_utilization"],
-        enable_chunked_prefill=config["enable_chunked_prefill"],
-        enable_prefix_caching=config["enable_prefix_caching"],
-        disable_custom_all_reduce=config["disable_custom_all_reduce"],
-        use_v2_block_manager=config["use_v2_block_manager"]
-    )
-
-    time_per_output_token_p95 = predict_time_per_output_token_p95(
-        max_num_batched_tokens=config["max_num_batched_tokens"],
-        max_num_seqs=config["max_num_seqs"],
-        swap_space=config["swap_space"],
-        block_size=config["block_size"],
-        scheduler_delay_factor=config["scheduler_delay_factor"],
-        gpu_memory_utilization=config["gpu_memory_utilization"],
-        enable_chunked_prefill=config["enable_chunked_prefill"],
-        enable_prefix_caching=config["enable_prefix_caching"],
-        disable_custom_all_reduce=config["disable_custom_all_reduce"],
-        use_v2_block_manager=config["use_v2_block_manager"]
-    )
-
     time_per_output_token_p99 = predict_time_per_output_token_p99(
         max_num_batched_tokens=config["max_num_batched_tokens"],
         max_num_seqs=config["max_num_seqs"],
@@ -352,32 +278,6 @@ def evaluate_config(config):
     )
 
     tokens_per_second_average = predict_tokens_per_second_average(
-        max_num_batched_tokens=config["max_num_batched_tokens"],
-        max_num_seqs=config["max_num_seqs"],
-        swap_space=config["swap_space"],
-        block_size=config["block_size"],
-        scheduler_delay_factor=config["scheduler_delay_factor"],
-        gpu_memory_utilization=config["gpu_memory_utilization"],
-        enable_chunked_prefill=config["enable_chunked_prefill"],
-        enable_prefix_caching=config["enable_prefix_caching"],
-        disable_custom_all_reduce=config["disable_custom_all_reduce"],
-        use_v2_block_manager=config["use_v2_block_manager"]
-    )
-
-    tokens_per_second_p50 = predict_tokens_per_second_p50(
-        max_num_batched_tokens=config["max_num_batched_tokens"],
-        max_num_seqs=config["max_num_seqs"],
-        swap_space=config["swap_space"],
-        block_size=config["block_size"],
-        scheduler_delay_factor=config["scheduler_delay_factor"],
-        gpu_memory_utilization=config["gpu_memory_utilization"],
-        enable_chunked_prefill=config["enable_chunked_prefill"],
-        enable_prefix_caching=config["enable_prefix_caching"],
-        disable_custom_all_reduce=config["disable_custom_all_reduce"],
-        use_v2_block_manager=config["use_v2_block_manager"]
-    )
-
-    tokens_per_second_p95 = predict_tokens_per_second_p95(
         max_num_batched_tokens=config["max_num_batched_tokens"],
         max_num_seqs=config["max_num_seqs"],
         swap_space=config["swap_space"],
@@ -406,12 +306,12 @@ def evaluate_config(config):
     # Calculate score
     epsilon = 1e-6
     score = (
-        latency_average + latency_p50 + latency_p95 + latency_p99 +
-        time_to_first_token_average + time_to_first_token_p50 + time_to_first_token_p95 + time_to_first_token_p99 +
-        time_per_output_token_average + time_per_output_token_p50 + time_per_output_token_p95 + time_per_output_token_p99
-    ) / 12 - (
-        tokens_per_second_average + tokens_per_second_p50 + tokens_per_second_p95 + tokens_per_second_p99
-    ) / 4
+        latency_average + latency_p99 +
+        time_to_first_token_average + time_to_first_token_p99 +
+        time_per_output_token_average + time_per_output_token_p99
+    ) / 6 - (
+        tokens_per_second_average + tokens_per_second_p99
+    ) / 2
 
     return score
 
