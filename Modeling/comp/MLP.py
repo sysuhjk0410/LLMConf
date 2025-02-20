@@ -47,7 +47,7 @@ output_dim = 1   # Output dimension: evaluation metric
 for i, metric in enumerate(metrics):
     print(f"Training MLP model for {metric}...")
 
-    # Get the dependent variable for the current evaluation metric (columns 11 to 26)
+    # Get the dependent variable for the current evaluation metric 
     y = data.iloc[:, 10 + i].values
 
     # Normalize evaluation metric data
