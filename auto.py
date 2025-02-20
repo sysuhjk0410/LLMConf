@@ -17,10 +17,7 @@ for i in range(1500):  # Assume you need to execute 1500 times
     split_strings = x.split(' ')
     yy = [f"{s}" for s in split_strings]
     print(yy)
-    # yy = ','.join(quoted_strings)
 
-    # y = str(command).replace("[", "").replace("]", "").replace("'", "").replace(",", "").split(" ")
-    # print(y)
 
     # Start a subprocess and specify dynamic port
     process = subprocess.Popen(
