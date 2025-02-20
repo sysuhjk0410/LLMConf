@@ -140,7 +140,7 @@ async def run_benchmark(num_requests, concurrency, request_timeout, output_token
     avg_tpot = sum(tpot_list) / len(tpot_list) if tpot_list else 0
 
     # calculate percentiles
-    percentiles = [50, 95, 99]
+    percentiles = [99]
     latency_percentiles = [calculate_percentile(latencies, p) for p in percentiles]
     ttft_percentiles = [calculate_percentile(ttft_list, p) for p in percentiles]
     tpot_percentiles = [calculate_percentile(tpot_list, p) for p in percentiles]
