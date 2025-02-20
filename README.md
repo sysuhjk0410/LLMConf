@@ -5,7 +5,7 @@ LLMConf is a multi-parameter tuning method for LLMs. By leveraging knowledge-enh
 
 The experimental results show that LLMConf significantly outperforms state-of-the-art methods, achieving an average performance improvement of **20.1%** on **7** metrics.
 
-LLMConf demonstrates a strong transferability across diverse datasets, varying concurrency levels, and different LLM base models.
+LLMConf demonstrates a strong transferability across diverse datasets, varying concurrency levels and different LLM base models.
 
 ![overview of LLMConf](https://github.com/sysuhjk0410/LLMConf/blob/main/workflow.png) 
 
