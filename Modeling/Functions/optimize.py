@@ -6,10 +6,10 @@ from scipy.linalg import LinAlgError
 
 # Import prediction functions
 from predict_functions import (
-    predict_latency_average, predict_latency_p50, predict_latency_p95, predict_latency_p99,
-    predict_time_to_first_token_average, predict_time_to_first_token_p50, predict_time_to_first_token_p95, predict_time_to_first_token_p99,
-    predict_time_per_output_token_average, predict_time_per_output_token_p50, predict_time_per_output_token_p95, predict_time_per_output_token_p99,
-    predict_tokens_per_second_average, predict_tokens_per_second_p50, predict_tokens_per_second_p95, predict_tokens_per_second_p99
+    predict_latency_average, predict_latency_p99,
+    predict_time_to_first_token_average, predict_time_to_first_token_p99,
+    predict_time_per_output_token_average, predict_time_per_output_token_p99,
+    predict_tokens_per_second_average
 )
 
 # Define the range of configuration parameters
@@ -41,7 +41,7 @@ def config_to_vector(config):
         config["use_v2_block_manager"],
     ]
 
-# Objective calculation: Use the input configuration for prediction functions and return 16 objective values
+# Objective calculation: Use the input configuration for prediction functions and return 7 objective values
 def cal_obj(pop, nobj):
     objs = np.zeros((pop.shape[0], nobj))
     for i in range(pop.shape[0]):
@@ -60,21 +60,13 @@ def cal_obj(pop, nobj):
 
         # Unpack and pass the values from the configuration dictionary to the prediction functions
         objs[i, 0] = predict_latency_average(**config)
-        objs[i, 1] = predict_latency_p50(**config)
-        objs[i, 2] = predict_latency_p95(**config)
-        objs[i, 3] = predict_latency_p99(**config)
-        objs[i, 4] = predict_time_to_first_token_average(**config)
-        objs[i, 5] = predict_time_to_first_token_p50(**config)
-        objs[i, 6] = predict_time_to_first_token_p95(**config)
-        objs[i, 7] = predict_time_to_first_token_p99(**config)
-        objs[i, 8] = predict_time_per_output_token_average(**config)
-        objs[i, 9] = predict_time_per_output_token_p50(**config)
-        objs[i, 10] = predict_time_per_output_token_p95(**config)
-        objs[i, 11] = predict_time_per_output_token_p99(**config)
-        objs[i, 12] = -predict_tokens_per_second_average(**config)
-        objs[i, 13] = -predict_tokens_per_second_p50(**config)
-        objs[i, 14] = -predict_tokens_per_second_p95(**config)
-        objs[i, 15] = -predict_tokens_per_second_p99(**config)
+        objs[i, 1] = predict_latency_p99(**config)
+        objs[i, 2] = predict_time_to_first_token_average(**config)
+        objs[i, 3] = predict_time_to_first_token_p99(**config)
+        objs[i, 4] = predict_time_per_output_token_average(**config)
+        objs[i, 5] = predict_time_per_output_token_p99(**config)
+        objs[i, 6] = -predict_tokens_per_second_average(**config)
+
 
     return objs
 
@@ -239,7 +231,7 @@ def nsga3(npop, ngen, nobj, nvar, lb, ub, ref_points):
     return pop, objs
 
 # Execute optimization with specified parameters
-nobj = 16  # Number of objectives
+nobj = 7  # Number of objectives
 nvar = len(config_ranges)  # Number of configuration parameters
 lb = np.array([config_ranges[key][0] if isinstance(config_ranges[key], tuple) else 0 for key in config_ranges])
 ub = np.array([config_ranges[key][1] if isinstance(config_ranges[key], tuple) else len(config_ranges[key]) - 1 for key in config_ranges])
