@@ -2,10 +2,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 # Import prediction functions
 from predict_functions import (
-    predict_latency_average, predict_latency_p50, predict_latency_p95, predict_latency_p99,
-    predict_time_to_first_token_average, predict_time_to_first_token_p50, predict_time_to_first_token_p95, predict_time_to_first_token_p99,
-    predict_time_per_output_token_average, predict_time_per_output_token_p50, predict_time_per_output_token_p95, predict_time_per_output_token_p99,
-    predict_tokens_per_second_average, predict_tokens_per_second_p50, predict_tokens_per_second_p95, predict_tokens_per_second_p99
+    predict_latency_average, predict_latency_p99,
+    predict_time_to_first_token_average, predict_time_to_first_token_p99,
+    predict_time_per_output_token_average, predict_time_per_output_token_p99,
+    predict_tokens_per_second_average
 )
 
 # Define the range of configuration parameters
@@ -31,21 +31,12 @@ class MultiArmedBandit:
         # Evaluate the performance of the configuration
         latencies = [
             predict_latency_average(**config),
-            predict_latency_p50(**config),
-            predict_latency_p95(**config),
             predict_latency_p99(**config),
             predict_time_to_first_token_average(**config),
-            predict_time_to_first_token_p50(**config),
-            predict_time_to_first_token_p95(**config),
             predict_time_to_first_token_p99(**config),
             predict_time_per_output_token_average(**config),
-            predict_time_per_output_token_p50(**config),
-            predict_time_per_output_token_p95(**config),
             predict_time_per_output_token_p99(**config),
-            -predict_tokens_per_second_average(**config),
-            -predict_tokens_per_second_p50(**config),
-            -predict_tokens_per_second_p95(**config),
-            -predict_tokens_per_second_p99(**config)
+            -predict_tokens_per_second_average(**config)
         ]
         return np.sum(latencies)
 
