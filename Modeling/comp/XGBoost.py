@@ -25,7 +25,7 @@ X_scaled = scaler_X.fit_transform(X)
 for i, metric in enumerate(metrics):
     print(f"Training XGBoost model for {metric}...")
 
-    # Get the current evaluation metric as the dependent variable (columns 11 to 26)
+    # Get the current evaluation metric as the dependent variable 
     y = data.iloc[:, 10 + i].values
 
     # Standardize the evaluation metric data
