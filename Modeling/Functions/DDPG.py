@@ -19,8 +19,7 @@ from predict_functions import (
     predict_time_to_first_token_p99,
     predict_time_per_output_token_average, 
     predict_time_per_output_token_p99,
-    predict_tokens_per_second_average, 
-    predict_tokens_per_second_p99
+    predict_tokens_per_second_average
 )
 
 # 定义配置参数范围
