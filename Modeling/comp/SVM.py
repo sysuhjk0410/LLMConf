@@ -8,14 +8,14 @@ from sklearn.metrics import mean_squared_error, r2_score
 # Read the CSV file
 data = pd.read_csv('/LLMConf/Modeling/data.csv')
 
-# The first 10 columns are configuration parameters, the remaining columns are 16 performance metrics
+# The first 10 columns are configuration parameters, the remaining columns are 7 performance metrics
 X = data.iloc[:, :10].values  # Independent variables: configuration parameters
 
 # List of performance metric names
-metrics = ['latency_average', 'latency_p50', 'latency_p95', 'latency_p99',
-           'tokens_per_second_average', 'tokens_per_second_p50', 'tokens_per_second_p95', 'tokens_per_second_p99',
-           'time_to_first_token_average', 'time_to_first_token_p50', 'time_to_first_token_p95', 'time_to_first_token_p99',
-           'time_per_output_token_average', 'time_per_output_token_p50', 'time_per_output_token_p95', 'time_per_output_token_p99']
+metrics = ['latency_average', 'latency_p99',
+           'tokens_per_second_average', 
+           'time_to_first_token_average', 'time_to_first_token_p99',
+           'time_per_output_token_average', 'time_per_output_token_p99']
 
 # Data standardization
 scaler_X = StandardScaler()
