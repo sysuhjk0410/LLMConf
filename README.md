@@ -1,7 +1,7 @@
 # LLMConf: Knowledge-Enhanced Configuration Optimization for Large Language Model Inference
 
 ## 💡 What is LLMConf?
-LLMConf is a multi-parameter tuning method for LLMs. By leveraging knowledge-enhanced techniques, we identify tuning parameters and their value ranges, significantly reducing the search space for parameter combinations. To capture the impact of configuration parameters on inference performance, we use the automated machine learning tool TPOT to model the functional relationships between configuration parameters and each performance metric. Additionally, to optimize multiple performance metrics simultaneously and resolve conflicts in optimization directions, we implement a multi-objective optimization module based on the NSGA-Ⅲ algorithm.
+LLMConf is a multi-parameter tuning method for LLMs. By leveraging knowledge-enhanced techniques, we identify tuning parameters and their value ranges, significantly reducing the search space for parameter combinations. To capture the impact of configuration parameters on inference performance, we use the automated machine learning tool TPOT to model the functional relationships between configuration parameters and each performance metric. Additionally, to optimize multiple performance metrics simultaneously and resolve conflicts in optimization directions, we implement a multi-objective optimization module based on the NSGA-III algorithm.
 
 The experimental results show that LLMConf significantly outperforms state-of-the-art methods, achieving an average performance improvement of **20.1%** on **7** metrics.
 
