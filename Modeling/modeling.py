@@ -11,14 +11,14 @@ import json  # Used to save MSE, RMSE, and R² Score
 # Read the CSV file
 data = pd.read_csv('/LLMConf/Modeling/data.csv')
 
-# The first 10 columns are configuration parameters, and the remaining columns are 16 evaluation metrics
+# The first 10 columns are configuration parameters, and the remaining columns are evaluation metrics
 X = data.iloc[:, :10].values  # Independent variable: configuration parameters
 
-# Column names for the evaluation metrics
-metrics = ['latency_average', 'latency_p50', 'latency_p95', 'latency_p99',
-           'tokens_per_second_average', 'tokens_per_second_p50', 'tokens_per_second_p95', 'tokens_per_second_p99',
-           'time_to_first_token_average', 'time_to_first_token_p50', 'time_to_first_token_p95', 'time_to_first_token_p99',
-           'time_per_output_token_average', 'time_per_output_token_p50', 'time_per_output_token_p95', 'time_per_output_token_p99']
+# Define the selected 7 performance metrics
+metrics = ['latency_average', 'latency_p99', 
+           'tokens_per_second_average', 
+           'time_to_first_token_average', 'time_to_first_token_p99',
+           'time_per_output_token_average', 'time_per_output_token_p99']
 
 # Data standardization
 scaler_X = StandardScaler()
