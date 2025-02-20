@@ -43,7 +43,7 @@ with open(os.path.join(save_dir, 'predict_functions.py'), 'w') as f:
     for i, metric in enumerate(metrics):
         print(f"Training TPOT model for {metric}...")
 
-        # Get the dependent variable for the current evaluation metric (columns 11 to 26)
+        # Get the dependent variable for the current evaluation metric 
         y = data.iloc[:, 10 + i].values
 
         # Standardize the evaluation metric data
