@@ -25,14 +25,14 @@ X_scaled = scaler_X.fit_transform(X)
 for i, metric in enumerate(metrics):
     print(f"Training SVM model for {metric}...")
 
-    # Get the dependent variable for the current performance metric (columns 11 to 26)
+    # Get the dependent variable for the current performance metric 
     y = data.iloc[:, 10 + i].values
 
     # Standardize the performance metric data
     scaler_y = StandardScaler()
     y_scaled = scaler_y.fit_transform(y.reshape(-1, 1)).reshape(-1)
 
-    # Split the data into training and testing sets, test set proportion increased to 40%
+    # Split the data into training and testing sets
     X_train, X_test, y_train, y_test = train_test_split(X_scaled, y_scaled, test_size=0.2, random_state=42)
 
     # Create SVM model, further reduce C and increase epsilon
