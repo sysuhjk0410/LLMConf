@@ -66,7 +66,7 @@ python /LLMConf/vllm_benchmark1.py --num_requests 200 --concurrency 80 --output_
 ```
 ✨️ If using the `ChatDoctor-HealthCareMagic-100k` dataset for testing, `vllm_benchmark_Health.py` can be run.
 
-✨️ Note: All the data collected in this experiment can be found in the `Data` folder.(The naming of the CSV file sequentially represents LLM, concurrency, and dataset.)
+✨️ Note: All the data collected in this experiment can be found in the `Data` folder.(The naming of the CSV file sequentially represents LLM, concurrency and dataset.)
 
 ## - Performance Modeling
 First, move the data that needs to be modeled to the `Modeling` directory.
