@@ -41,7 +41,7 @@ def config_to_vector(config):
         config["use_v2_block_manager"],
     ]
 
-# Objective calculation: Use the passed configuration for the prediction function and return 16 objective values
+# Objective calculation: Use the passed configuration for the prediction function and return 7 objective values
 def cal_obj(pop, nobj):
     objs = np.zeros((pop.shape[0], nobj))
     for i in range(pop.shape[0]):
