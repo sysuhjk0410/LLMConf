@@ -26,7 +26,7 @@ def rf_cv_lgb(max_num_batched_tokens, max_num_seqs, swap_space, block_size, sche
 
     # Calculate the objective function
     return (
-        predict_tokens_per_second_average(max_num_batched_tokens, max_num_seqs, swap_space, block_size, scheduler_delay_factor, gpu_memory_utilization, enable_chunked_prefill, enable_prefix_caching, disable_custom_all_reduce, use_v2_block_manager) +
+        predict_tokens_per_second_average(max_num_batched_tokens, max_num_seqs, swap_space, block_size, scheduler_delay_factor, gpu_memory_utilization, enable_chunked_prefill, enable_prefix_caching, disable_custom_all_reduce, use_v2_block_manager) -
         predict_latency_average(max_num_batched_tokens, max_num_seqs, swap_space, block_size, scheduler_delay_factor, gpu_memory_utilization, enable_chunked_prefill, enable_prefix_caching, disable_custom_all_reduce, use_v2_block_manager) -
         predict_latency_p99(max_num_batched_tokens, max_num_seqs, swap_space, block_size, scheduler_delay_factor, gpu_memory_utilization, enable_chunked_prefill, enable_prefix_caching, disable_custom_all_reduce, use_v2_block_manager) -
         predict_time_to_first_token_average(max_num_batched_tokens, max_num_seqs, swap_space, block_size, scheduler_delay_factor, gpu_memory_utilization, enable_chunked_prefill, enable_prefix_caching, disable_custom_all_reduce, use_v2_block_manager) -
