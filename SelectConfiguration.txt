@@ -1,5 +1,6 @@
-vLLM is an open-source high-speed inference framework for large language models.
+vLLM is an open-source high-speed inference framework for large language models. The following three sections form a knowledge base closely related to vLLM configuration parameters, sourced from the official vLLM documentation, the vLLM open-source code and the vLLM project's Issues.
 
+<vLLM Engine Arguments>
 Below, you can find an explanation of every engine argument for vLLM:
 usage: vllm serve [-h] [--model MODEL] [--tokenizer TOKENIZER]
                   [--skip-tokenizer-init] [--revision REVISION]
@@ -156,13 +157,142 @@ The following are the meanings and default values of the parameters:
 [--collect-detailed-traces COLLECT_DETAILED_TRACES]:Valid choices are model,worker,all. It makes sense to set this only if –otlp-traces-endpoint is set. If set, it will collect detailed traces for the specified modules. This involves use of possibly costly and or blocking operations and hence might have a performance impact.
 [--disable-async-output-proc]:Disable async output processing. This may result in lower performance.
 [--override-neuron-config OVERRIDE_NEURON_CONFIG]:override or set neuron device configuration.
+</vLLM Engine Arguments>
 
+<vLLM Source Code Config Relations>
+Below is a summary of the relationships among configuration parameters derived from vLLM's open-source code:
+[1] If max-num-batched-tokens is not explicitly set, the system dynamically calculates it based on max-num-seqs and block-size (default: max-num-seqs * block-size).
+[2] block-size must be a factor of max-model-len. If max-model-len % block-size != 0, a ValueError will be raised.
+[3] When kv-cache-dtype is set to fp8 or its subtypes (e.g., fp8_e4m3), the quantization-param-path parameter must be provided. Otherwise, a warning will be triggered.
+[4] gpu-memory-utilization directly affects the block allocation strategy. If the utilization is too high (close to 1.0), it may trigger an OOM, at which point the system will attempt to use the CPU swap space defined by swap-space.
+[5] When LoRA is enabled (enable-lora=True), max-logprobs is forced to 0.
+[6] When using speculative decoding (speculative-model), num-speculative-tokens must be greater than 0 and speculative-max-model-len cannot be less than the main model's max-model-len.
+[7] When running on non-CUDA devices (such as CPUs and TPUs), some quantization methods (e.g., bitsandbytes, fp8) will be disabled.
+[8] If max-model-len is not explicitly set, it will be extracted from the HuggingFace model configuration's max-position-embeddings or model-max-length field.
+[9] use-v2-block-manager and enable-prefix-caching cannot be enabled simultaneously. The V2 block manager already has built-in prefix caching logic.
+[10] For models with built-in sliding windows (e.g., Mistral), explicitly setting disable-sliding-window=True will override the model's original configuration.
+[11] When using guided-decoding-backend=lm-format-enforcer, max-logprobs will be forced to 0 (because the format enforcement engine requires exclusive handling of logprobs).
+[12] The product of pipeline-parallel-size and tensor-parallel-size cannot exceed the total number of GPUs.
+[13] When using load-format=sharded_state, this value is automatically set to tensor-parallel-size to ensure shards are loaded correctly.
+[14] num-lookahead-slots must be less than or equal to block-size. Otherwise, a ValueError is raised.
+[15] When both cpu-offload-gb and swap-space are greater than 0, the total CPU memory pool size is swap-space + cpu-offload-gb, which is used for hybrid swapping and offloading.
+[16] If speculative-max-model-len is not explicitly set, it defaults to the main model's max-model-len.
+[17] When PromptAdapter is enabled, max-prompt-adapter-token must be greater than 0, otherwise a ValueError is raised.
+[18] The format parsing for long-lora-scaling-factors: the input must be a comma-separated list of floating-point numbers, which is then parsed and stored as a List[float].
+[19] The content of model-loader-extra-config is merged into the model loader's load-config as a dictionary, taking precedence over other parameters.
+[20] If ngram-prompt-lookup-min is not explicitly set, the default value is max(1, ngram-prompt-lookup-max // 2).
+[21] fully-sharded-loras only takes effect when tensor-parallel-size > 1; otherwise, this parameter is silently ignored.
+[22] override-neuron-config only takes effect when device=neuron; setting this parameter on other device types will trigger a warning.
+[23] When the number of pending requests exceeds the threshold defined by speculative-disable-by-batch-size, speculative decoding is disabled, but already initiated speculative batches will continue to execute.
+[24] At startup, a buffer of size max-prompt-adapter-token * embedding-dim is pre-allocated to avoid dynamic adjustments at runtime.
+[25] If max-cpu-loras is not explicitly set, the default value is max(max-num-seqs, 1) to ensure that at least one sequence can be processed.
+[26] If speculative-draft-tensor-parallel-size is not specified, it defaults to the main model's tensor-parallel-size.
+[27] model-loader-extra-config only allows predefined keys (e.g., "load_weights" and "skip_modules"); any invalid keys will be filtered out.
+[28] When num-scheduler-steps is set to a value greater than 1, multiple forward passes per scheduling round are forced to test stability under extreme load.
+[29] max-num-seqs < max-num-batched-tokens (enforced in AsyncEngineDeadline scheduling logic).
+[30] On Neuron devices, block-size is overridden to equal max-model-len (ignores user input).
+[31] If num-gpu-blocks-override is set, GPU profiling is skipped, and gpu-memory-utilization is ignored.
+[32] enable-lora must be True for max-loras to take effect.
+[33] When kv-cache-dtype is set to FP8 variants, quantization-param-path must be provided.
+[34] fp8_e5m2 is only allowed on CUDA ≥11.8 and fp8_e4m3 is enforced on ROCm (AMD).
+[35] If unspecified, speculative-draft-tensor-parallel-size inherits from tensor-parallel-size.
+[36] max-cpu-loras defaults to max-num-seqs if unset and must be ≥ max-num-seqs.
+[37] Prefix caching is disabled if use-v2-block-manager is enabled.
+[38] Total parallelism (pipeline-parallel-size * tensor-parallel-size) must ≤ total GPUs.
+[39] Both contribute to CPU memory reservations, but cpu-offload-gb prioritizes offloaded weights.
+[40] num-speculative-tokens is capped at max-num-batched-tokens // 2 to avoid OOM.
+[41] lm-format-enforcer requires max-logprobs ≥ 1 to function.
+[42] load-format="tensorizer" is incompatible with quantization methods (raises NotImplementedError).
+[43] When sliding window is disabled, context window is hard-capped to the model’s max-position-embeddings.
+[44] rope-theta is ignored unless rope-scaling is explicitly configured.
+[45] enforce-eager=True disables CUDA graph capture regardless of max-seq-len-to-capture.
+[46] tokenizer-pool-type is ignored if tokenizer-pool-size=0 (synchronous mode).
+[47] LongLoRA scaling factors override rope-scaling if both are specified.
+[48] Speculative decoding is skipped if the batch size exceeds this threshold (avoids latency spikes).
+[49] min must be ≤ max and both must be ≥1 (enforced during config validation).
+[50] Prefill requests are split into chunks sized to max-num-batched-tokens (reduces memory spikes).
+[51] Both main and draft models must use the same device type (e.g., CUDA).
+[52] worker-use-ray is deprecated and forces distributed-executor-backend=ray.
+[53] preemption-mode="swap" requires contiguous physical GPU memory for block swapping.
+[54] The JSON config is passed to the loader specified by load-format (e.g., tensorizer).
+[55] Values like image=16 are parsed into a dict {"image": 16} for per-modality limits.
+[56] If unset, alpha = sqrt(posterior-threshold) (e.g., 0.3 for threshold 0.09).
+[57] max-prompt-adapters is ignored unless enable-prompt-adapter=True.
+[58] Draft model’s max-model-len must ≥ main model’s max-model-len (enforced during loading).
+[59] typical-acceptance-sampler requires posterior-threshold and posterior-alpha parameters.
+</vLLM Source Code Config Relations>
 
-Here are some of the latest related research:
-In the paper titled 'Efficient memory management for large language model serving with paged attention,' published at the SOSP '23 conference in 2023, it is pointed out that a larger block size also increases memory fragmentation.
+<Related Issues>
+Below are the configuration parameter-related issues filtered from all issues in the vLLM project, with each issue providing its number and main content:
+[#13387] Enabling Chunk Prefill on the ppc64le (IBM POWER) platform (i.e. when using the --enable-chunked-prefill parameter) fails due to an ipex dependency issue.
+[#12260] Removed incorrect comments, fixing the issue where the dependencies for outlines and compressed-tensors were stripped due to the comments. Note that "compressed-tensors" is an optional parameter for --quantization.
+[#12258] Reported an issue where, when using deepseek v3, it is not possible to set --tensor-parallel-size=16 and --pipeline-parallel-size=2 on the NVIDIA L20.
+[#11745] Reported an issue where setting a large context length (--max-model-len) when using vLLM leads to GPU memory exhaustion.
+[#11644] When using the vllm serve command, users specify parameters such as --max-model-len, --quantization (e.g., fp8), --tensor-parallel-size, and --trust-remote-code, but a ModuleNotFoundError is triggered at runtime, causing the model to fail to load.
+[#11537] An error occurs when loading models that use FP8/W8A8 quantization methods, with the issue related to the usage of the --quantization parameter.
+[#11331] On the POWERPC architecture, when setting --dtype to "auto", the automatic selection fails because FP16 is not supported; this issue is resolved by switching to BF16.
+[#11128] An error occurs when deploying the MiniCPM-V_2_6_awq_int4 model, indicating that the weight partition sizes do not meet the requirements. It is recommended to reduce --tensor-parallel-size or switch to --quantization gptq.
+[#10923] When using the deepseek v2.5 model configured with GPTQ (int4) quantization, an error occurs, related to the gptq option in the --quantization parameter.
+[#9579] Due to asynchronous output processing being enabled by default (disable_async_output_proc=False), long context tests fail; this issue was temporarily resolved by adjusting that parameter.
+[#9578] When launching the internvl2-8b model service, using the parameters --dtype auto, --gpu-memory-utilization, and --trust-remote-code causes a CUDA out-of-memory error.
+[#9163] When loading the Llama-3.2-11B-Vision-Instruct model, specifying --dtype=bfloat16 leads to excessive memory usage, eventually resulting in an OOM error.
+[#8956] Made the scheduling strategy configurable via EngineArgs, allowing relevant scheduling parameters to be set directly when creating the engine.
+[#8416] When using the --num-speculative-tokens parameter, vLLM throws an error "Worker.init() got an unexpected keyword argument 'num_speculative_tokens'". Removing this parameter then results in a message that the parameter is required, causing the draft model to fail to load.
+[#8313] In offline mode, using guided decoding (such as the outlines backend) for generation significantly reduces speed (10 to 20 times slower than unguided generation), reflecting a performance issue with the relevant guided decoding configuration parameters.
+[#8104] Under high request loads, using configuration parameters such as --max_num_batched_tokens, --max_num_seqs, and --rope-scaling results in extremely low throughput and high latency for the vLLM service, indicating a performance degradation issue under these settings.
+[#7587] In vLLM 0.5.0, when running inference with prefix caching enabled (enable_prefix_caching=True), an error occurs after processing five consecutive batches of 5000 items, causing the Qwen2 0.5B instruct model to report an error.
+[#7586] Proposed adding a benchmark script to measure speculative decoding metrics (such as scoring, verification, proposal time, and acceptance rate), involving configuration parameters related to speculative decoding (e.g., speculative-model, num-speculative-tokens, etc.).
+[#7479] In an H100 environment, tests for the aqlm mode fail, resulting in some incorrect generations; the issue is related to the aqlm option in the quantization parameter.
+[#7378] When using the facebook/opt-125m model, performing prefill/prefix operations with FP8 enabled (involving the kv-cache-dtype configuration) triggers an illegal memory access error in the Triton kernel.
+[#7375] When performing inference with the Mixtral-8x7B-Instruct-v0.1-AWQ model, calling llm.generate returns empty text.
+[#7277] Reused the compressed-tensors code to support quantization configuration, adding a dependency on quantization-related parameters (such as the compressed-tensors option in --quantization).
+[#6868] Explored the impact of block size on performance; experimental results did not verify the hypothesis that a smaller block size reduces memory fragmentation but increases management overhead.
+[#6767] Reported a potential data race issue when running the Llama 405b fp8 model, affecting the stability of the fp8 quantization configuration.
+[#6665] Fixed an issue in the FBGEMM fp8 quantization process where modules_to_not_convert being null caused a check to fail.
+[#6561] Reported an issue where using configuration parameters such as --max-model-len, --gpu-memory-utilization, --enforce-eager, --seed, and --served-model-name fails to fully utilize the available GPU memory.
+[#7175] Extended the block-size parameter to allow it to be set to the sequence length to meet the requirements of neuron devices.
+[#6455] Optimized memory usage for pipeline parallel models by creating components based on rank, reducing unnecessary component instances using the --pipeline-parallel-size parameter.
+[#6248] Proposed setting --tensor-parallel-size to -1 to automatically use all available CUDA devices, thereby simplifying multi-GPU deployment configuration.
+[#6246] Discussed the issue that, under the FP8 data type, attention layer computations need to first convert FP8 to FP16/BF16, and inquired whether there are plans to directly support FP8 attention calculations (related to the fp8 option in the --quantization parameter).
+[#6142] Addressed an error in the deepseek-v2 model when using awq quantization, involving the support for setting the --quantization parameter to awq.
+[#6038] Pointed out that speculative decoding fails to adhere to the --seed parameter set in each request, resulting in non-reproducible results.
+[#5513] Reported an FP8 weight loading error when loading the gpt_bigcode model, involving an issue with the fp8 option in the --quantization parameter.
+[#4570] Proposed improvements to address the insufficient robustness of the FP8 static scaling implementation, in order to enhance the stability of FP8 computations.
+[#4346] Discussed whether, in Llama2 models, --max_model_len can be set to a value exceeding the --max_position_embeddings specified in the model configuration, and mentioned the possibility of automatic rope scaling.
+[#4344] Reported that when loading the mistralai/Mixtral-8x22B-Instruct-v0.1 model, errors occur when using configuration parameters such as --seed, --tensor-parallel-size, --max-num-batched-tokens, and --max-log-len, causing issues in distributed execution.
+[#4242] Discussed that when loading multiple models on the same GPU in a cluster environment, using configuration parameters such as --gpu-memory-utilization, --max_model_len, and --enforce-eager can lead to resource allocation errors, thereby affecting model deployment.
+[#4139] For the issue of inaccurate prompt logprob calculation when using --enable-chunked-prefill, proposed introducing a new do_sample parameter to correct the logprob computation.
+[#4138] Fixed an issue in the LoRA loading check to ensure that the LoRA adapter is loaded correctly, corresponding with parameters such as --enable-lora and --max_loras in the official documentation.
+[#3417] Explored whether vLLM supports LoRA inference for wizardcoder and deepseek models, involving the support for LoRA adapter configuration parameters.
+[#3416] Reported that when deploying vLLM in Docker, errors occur when using configuration parameters such as --model, --tensor-parallel-size, --dtype, --quantization, --max-model-len, and --enforce-eager, causing the service to fail to start.
+[#3316] Tested the throughput of the Qwen1.8B model using merged LoRA weights versus dynamically calling LoRA, with results showing that merging LoRA weights is faster.
+[#3315] Implemented LoRA for the Qwen1.5 model, referencing the LoRA implementation in the Llama model.
+[#3314] Discussed support for pipeline parallelism, noting that there is currently a preference for tensor parallelism, and welcomed contributions to asynchronous pipeline parallelism.
+[#3313] Proposed supporting different sampling parameters for different requests in the LLM API, to allow parallel inference with individually configured sampling parameters.
+[#3210] Inquired about the appropriate scenarios for using the npcache weight loading format, noting that it loads more slowly compared to the safetensors format.
+[#2994] Proposed the integration of X-LoRA, which requires dual KV caches, and discussed the complexity of implementing this feature in vLLM.
+[#2889] Fixed an issue in the LLM entry code regarding LoRA support, ensuring that the LoRA adapter is loaded correctly.
+[#2787] Reported that when using squeezellm quantization (in conjunction with --max-model-len, --gpu-memory-utilization, and --quantization squeezellm), GPU memory usage is higher than expected, raising doubts about whether the configuration parameters are effective.
+[#2785] Encountered an error when loading the Qwen1.5-7B-Chat model, as the model's maximum sequence length exceeds the KV cache capacity; it is recommended to adjust the --max-model-len or --gpu-memory-utilization parameters.
+[#2782] Proposed supporting the setting of logprobs to the size of the model's vocabulary, to address issues arising from differences in vocabulary sizes between models.
+[#374] Suggested updating the error message for V100 GPUs, advising users to set --dtype to "half" to avoid the issue.
+[#2373] Compared the speed differences between vLLM and trtllm when using awq quantization, questioning the performance of the awq GEMM kernel in vLLM.
+[#479] Reported that when using --tensor-parallel-size greater than 1, RayWorker gets stuck in multi-GPU environments, suggesting that this configuration may be problematic in distributed execution.
+[#2476] Described an issue where using the Mixtral-8x7B-Instruct-v0.1 model with configuration parameters such as --seed, --tensor-parallel-size, and --max-num-batched-tokens causes generation interruptions or crashes.
+[#2374] Suggested providing more user-friendly error messages on V100 GPUs and advising users to set --dtype to half.
+[#2479] Reported that when using --tensor-parallel-size greater than 1, RayWorker experiences slowdowns, possibly related to the setting of this parameter.
+[#1446] Regarding setting model quantization to int4 via the API, it was noted that vLLM currently does not support 4-bit quantization, involving the --quantization parameter.
+[#1445] Failed to load the Qwen-14B-Chat tokenizer; the error message advises setting the --trust-remote-code parameter to load a custom tokenizer.
+[#2164] Fixed an issue with the RoPE kernel on long sequences, involving the --rope-scaling and --rope-theta parameters.
+[#2065] Added a Neuron build option to allow building vLLM with the Neuron toolchain, related to parameters such as --device.
+[#2064] Reported that Mistral/Mixtral models output anomalous results when generating more than 4096 tokens, suggesting that the sliding window configuration (related to the --disable-sliding-window parameter) may need adjustment.
+[#2165] Regarding CUDA errors when using GPTQ quantization on V100, it is suggested that adjustments to quantization configuration parameters (such as --quantization) or rebuilding the image might be necessary.
+[#1759] Reported an error during single GPU inference due to tensor model parallel group initialization issues, indicating a compatibility problem with the configuration parameters in a single GPU environment.
+[#1449] Explored whether increasing --tensor-parallel-size or adjusting the --gpu-memory-utilization and --max-model-len parameters could distribute the memory burden when a single GPU is insufficient.
+[#1448] Discussed an issue where, when using the llama2‑70B model, setting --tensor-parallel-size to 8 causes the probability tensors during generation to take on illegal values (such as inf or nan), whereas setting it to 4 works normally; the cause was questioned.
+[#609] Confirmed that vLLM supports tensor parallel deployment across multiple single-GPU machines, and recommended referring to the official documentation for distributed deployment configuration.
+[#7896] When deploying the Meta-Llama-3.1-405B-Instruct model in a Kubernetes environment, multiple configuration parameters were used in the startup command (such as --model, --tensor-parallel-size, --pipeline_parallel_size, --max-logprobs, --max-num-batched-tokens, --enable-chunked-prefill, --kv-cache-dtype, --disable-log-stats, --gpu-memory-utilization, --device, and --quantization), and one replica repeatedly restarted due to NCCL errors.
+[#7793] When running the Mistral-Nemo-Instruct-2407 model, using FP8 quantization led to an out-of-memory issue. The startup command included configuration parameters (such as --model, --max-model-len, --gpu-memory-utilization, --quantization, --enable-prefix-caching, and --enforce-eager), which resulted in a regression error during the FP8 Marlin quantization process.
+</Related Issues>
 
-Here are issues raised by users in the open-source community for LLMs:
-[Bug] CUDA OOM: When launching the vLLM server on an A100 GPU with Llama 3.1 and trying to decrease max-num-batched-tokens from 2048 to 100, the command results in a CUDA OOM error.
-[Analysis] OOM happens because the profiler self.model_runner.profile_run() may incorrectly compute the free GPU memory.
-
-Please identify the parameters from the vLLM Engine Arguments that have the greatest impact on the performance of LLM based on the information above, and provide reasons.
+Please identify the parameters from the vLLM Engine Arguments that have the greatest impact on the performance of LLM based on the information above, and provide reasons. Please generate at least ten independent chains of reasoning that lead to your answer, and then provide a final consolidated answer based on the consensus of these reasoning paths.
