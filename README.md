@@ -33,8 +33,7 @@ After completing the above steps, move into the `LLMConf` directory and follow t
 ## - Knowledge-based Parameter Selection
 We need to structure the constructed knowledge base into the prompt. 
 
-For the prompt used in parameter selection, refer to `SelectConfiguration.txt` (take determining the value range for
-`max-num-batched-tokens` as an example). Run the following command to complete the tuning parameter selection, setting the `file_path` value to `./SelectConfiguration.txt`.
+For the prompt used in parameter selection, refer to `SelectConfiguration.txt` (using the determination of the value range for `max-num-batched-tokens` as an example). Run the following command to complete the tuning parameter selection, setting the `file_path` value to `./SelectConfiguration.txt`.
 ```bash
 cd LLMConf
 python llm_chat.py
