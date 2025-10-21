@@ -133,3 +133,17 @@ python DDPG.py
 ```bash
 python NSGA3.py
 ```
+
+
+## Reference
+Please cite our IWQoS 2025 paper if you find this work is helpful. 
+```
+@inproceedings{he2025llmconf,
+  title={LLMConf: Knowledge-Enhanced Configuration Optimization for Large Language Model Inference},
+  author={He, Jingkai and Chen, Pengfei and Wang, Yilun and Huang, Haiyu and Zhang, Chuanfu and Huang, Haojia and Chen, Danwen},
+  booktitle={2025 IEEE/ACM 33rd International Symposium on Quality of Service (IWQoS)},
+  pages={1--10},
+  year={2025},
+  organization={IEEE}
+}
+```
